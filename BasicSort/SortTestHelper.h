@@ -3,33 +3,34 @@
 #include<ctime>
 #include<time.h>
 #include<cassert>
+#include<iomanip>
 
 using namespace std;
 
 namespace SortTestHelper {
 
     //生产有n个元素的随机数组，每个元素的随机范围为 [rangeL,rangeR]
-    int* generateRandomArray(size_t n, size_t rangeL, size_t rangeR)
+    int* generateRandomArray(int n, int rangeL, int rangeR)
     {
         assert(rangeL <= rangeR);
         int * arr = new int[n];
         srand(time(NULL));
-        for (size_t i = 0; i < n; i++)
+        for (int i = 0; i < n; i++)
         {
             arr[i] = rand() % (rangeR - rangeL + 1) + rangeL;
         }
         return arr;
     }
-    int* generateNearlyOrderedArray(size_t n, size_t swapTimes)
+    int* generateNearlyOrderedArray(int n, int swapTimes)
     {
         int* arr = new int[n];
-        for (size_t i = 0; i < n; i++)
+        for (int i = 0; i < n; i++)
         {
             arr[i] = i;
         }
 
         srand(time(NULL));
-        for (size_t i = 0; i < swapTimes; i++)
+        for (int i = 0; i < swapTimes; i++)
         {
             int posx = rand() % n;
             int posy = rand() % n;
@@ -38,18 +39,18 @@ namespace SortTestHelper {
         return arr;
     }
     template<typename T>
-    void printArray(T arr[], size_t n)
+    void printArray(T arr[], int n)
     {
-        for (size_t i = 0; i < n; i++)
+        for (int i = 0; i < n; i++)
         {
             cout << arr[i] << " ";
         }
         cout << endl;
     }
     template <typename T>
-    bool isSorted(T arr[], size_t n)
+    bool isSorted(T arr[], int n)
     {
-        for (size_t i = 0; i < n - 1; i++)
+        for (int i = 0; i < n - 1; i++)
         {
             if (arr[i] > arr[i + 1])
             {
@@ -59,16 +60,18 @@ namespace SortTestHelper {
         return true;
     }
     template<typename T>
-    void testSort(string sortName, void(*sort)(T[], size_t), T arr[], size_t n)
+    void testSort(string sortName, void(*sort)(T[], int), T arr[], int n)
     {
         clock_t startTime = clock();
         sort(arr,n);
         clock_t endTime = clock();
         assert(isSorted(arr,n));
-        cout << sortName << " : " << double(endTime - startTime) / CLOCKS_PER_SEC << " s" << endl;
+
+        cout.setf(ios::fixed);
+        cout << sortName << " : " <<fixed <<setprecision(6) << double(double(endTime) - double(startTime)) / CLOCKS_PER_SEC << " s" << endl;
         return;
     }
-    int* copyIntArray(int arr[], size_t n)
+    int* copyIntArray(int arr[], int n)
     {
         int* arrRet = new int[n];
         std::copy(arr,arr+n,arrRet);

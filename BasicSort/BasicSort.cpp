@@ -11,19 +11,31 @@ using namespace std;
 
 int main()
 {
-    size_t n = 10000;
-    //int* arr = SortTestHelper::generateNearlyOrderedArray(n,10);
+    int n = 70000;
+    //int* arr = SortTestHelper::generateNearlyOrderedArray(n,0);
     int* arr = SortTestHelper::generateRandomArray(n, 0, n);
 
     int* arr2 = SortTestHelper::copyIntArray(arr,n);
+    cout << "Test for random array: n = " << n << endl;
     //SortTestHelper::printArray(arr,n);
     SortTestHelper::testSort("InsertionSort", insertionSort,arr,n);
-    SortTestHelper::testSort("SelectionSort", selectionSort, arr2, n);
+    //SortTestHelper::testSort("SelectionSort", selectionSort, arr2, n);
+    SortTestHelper::testSort("MergeSort", mergeSort, arr2, n);
 
+    int swaptimes = 10;
+    int* arrNearlyOrdered = SortTestHelper::generateNearlyOrderedArray(n, swaptimes);
+    int* arrNearlyOrdered2 = SortTestHelper::copyIntArray(arrNearlyOrdered, n);
+    cout << "Test for nearly ordered array: n = " << n <<" swaptimes = "<< swaptimes<<endl;
+    //SortTestHelper::printArray(arr,n);
+    SortTestHelper::testSort("InsertionSort", insertionSort, arrNearlyOrdered, n);
+    //SortTestHelper::testSort("SelectionSort", selectionSort, arr2, n);
+    SortTestHelper::testSort("MergeSort", mergeSort, arrNearlyOrdered2, n);
     //selectionSort(arr,n);
     //SortTestHelper::printArray(arr, n);
     delete[] arr;
     delete[] arr2;
+    delete[] arrNearlyOrdered;
+    delete[] arrNearlyOrdered2;
 
     return 0;
 }
