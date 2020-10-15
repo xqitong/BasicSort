@@ -1,52 +1,57 @@
-﻿// BasicSort.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
-//
-
-#include <iostream>
+﻿#include <iostream>
 
 #include "SortTestHelper.h"
 #include "SortUtil.h"
 
 using namespace std;
 
-
+// https://code.visualstudio.com/docs/cpp/config-mingw
 int main()
 {
-    int n = 70000;
+    //编译器没有限制，不过会受到栈大小的限制，windows下栈的默认大小是1M，递归次数太多会造成栈溢出
+    //
+    //在 Visual Studio 开发环境中设置此链接器选项
+
+    //    打开此项目的“属性页”对话框。有关详细信息，请参见设置 Visual C++ 项目属性。
+    //    单击“链接器”文件夹。
+    //    单击“系统”属性页。
+    //    修改下列任一属性：
+    //    堆栈提交大小
+    //    堆栈保留大小 ?*1024*1024byte = ?mb
+    int n = 1000000;
+    int intSize = sizeof(int);
     //int* arr = SortTestHelper::generateNearlyOrderedArray(n,0);
-    int* arr = SortTestHelper::generateRandomArray(n, 0, n);
+    int* arr1 = SortTestHelper::generateRandomArray(n, 0, n);
 
-    int* arr2 = SortTestHelper::copyIntArray(arr,n);
+    int* arr2 = SortTestHelper::copyIntArray(arr1, n);
     cout << "Test for random array: n = " << n << endl;
-    //SortTestHelper::printArray(arr,n);
-    SortTestHelper::testSort("InsertionSort", insertionSort,arr,n);
-    //SortTestHelper::testSort("SelectionSort", selectionSort, arr2, n);
-    SortTestHelper::testSort("MergeSort", mergeSort, arr2, n);
+    SortTestHelper::testSort("MergeSort", mergeSort, arr1, n);
+    SortTestHelper::testSort("QuickSort", quickSort, arr2, n);
 
-    int swaptimes = 10;
-    int* arrNearlyOrdered = SortTestHelper::generateNearlyOrderedArray(n, swaptimes);
-    int* arrNearlyOrdered2 = SortTestHelper::copyIntArray(arrNearlyOrdered, n);
-    cout << "Test for nearly ordered array: n = " << n <<" swaptimes = "<< swaptimes<<endl;
-    //SortTestHelper::printArray(arr,n);
-    SortTestHelper::testSort("InsertionSort", insertionSort, arrNearlyOrdered, n);
-    //SortTestHelper::testSort("SelectionSort", selectionSort, arr2, n);
-    SortTestHelper::testSort("MergeSort", mergeSort, arrNearlyOrdered2, n);
-    //selectionSort(arr,n);
-    //SortTestHelper::printArray(arr, n);
-    delete[] arr;
+    delete[] arr1;
     delete[] arr2;
-    delete[] arrNearlyOrdered;
-    delete[] arrNearlyOrdered2;
+
+    int swaptimes = 100;
+    arr1 = SortTestHelper::generateNearlyOrderedArray(n, swaptimes);
+    arr2 = SortTestHelper::copyIntArray(arr1, n);
+    cout << "Test for nearly ordered array: n = " << n << " swaptimes = " << swaptimes << endl;
+    SortTestHelper::testSort("MergeSort", mergeSort, arr1, n);
+    SortTestHelper::testSort("QuickSort", quickSort, arr2, n);
+
+    delete[] arr1;
+    delete[] arr2;
+    //
+        // 测试3 测试存在包含大量相同元素的数组
+    // 但此时, 对于含有大量相同元素的数组, 我们的快速排序算法再次退化成了O(n^2)级别的算法
+    // 思考一下为什么在这种情况下, 快排退化成了O(n^2)的算法? :)
+    cout << "Test for random array, size = " << n << ", random range [0,10]" << endl;
+    arr1 = SortTestHelper::generateRandomArray(n, 0, 10);
+    arr2 = SortTestHelper::copyIntArray(arr1, n);
+    SortTestHelper::testSort("Merge Sort", mergeSort, arr1, n);
+    SortTestHelper::testSort("Quick Sort", quickSort, arr2, n);
+
+    delete[] arr1;
+    delete[] arr2;
 
     return 0;
 }
-
-// 运行程序: Ctrl + F5 或调试 >“开始执行(不调试)”菜单
-// 调试程序: F5 或调试 >“开始调试”菜单
-
-// 入门使用技巧: 
-//   1. 使用解决方案资源管理器窗口添加/管理文件
-//   2. 使用团队资源管理器窗口连接到源代码管理
-//   3. 使用输出窗口查看生成输出和其他消息
-//   4. 使用错误列表窗口查看错误
-//   5. 转到“项目”>“添加新项”以创建新的代码文件，或转到“项目”>“添加现有项”以将现有代码文件添加到项目
-//   6. 将来，若要再次打开此项目，请转到“文件”>“打开”>“项目”并选择 .sln 文件

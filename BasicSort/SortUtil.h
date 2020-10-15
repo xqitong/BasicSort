@@ -1,4 +1,7 @@
 #pragma once
+#include <algorithm>
+#include <time.h>
+#include <stdlib.h>
 //template<typename T>
 //void insertionSort(T arr[], int n)
 //{
@@ -11,6 +14,8 @@
 //    }
 //    }
 //}
+
+#pragma region Insertion  Sort
 template<typename T>
 void insertionSort(T arr[], int n)
 {
@@ -32,9 +37,9 @@ void insertionSort(T arr[], int n)
     }
 }
 template<typename T>
-void insertionSort(T arr[], int l,int r)
+void insertionSort(T arr[], int l, int r)
 {
-    for (int i = l+1; i <= r; i++)
+    for (int i = l + 1; i <= r; i++)
     {
         //寻找元素 arr[i] 合适的插入位置
         T e = arr[i];
@@ -51,6 +56,9 @@ void insertionSort(T arr[], int l,int r)
         arr[j] = e;
     }
 }
+#pragma endregion
+
+#pragma region Selection Sort
 template<typename T>
 void selectionSort(T arr[], int n)
 {
@@ -68,14 +76,17 @@ void selectionSort(T arr[], int n)
         std::swap(arr[i], arr[minIndex]);
     }
 }
+#pragma endregion
+
+#pragma region merge sort
 //merge sort
 template<typename T>
 void __merge(T arr[], int l, int mid, int r)
 {
     //复制排序区段
    // const int cnt = r - l + 1;
-    T *aux = new T[r - l + 1];
-   // T aux[r - l + 1];
+    T* aux = new T[r - l + 1];
+    // T aux[r - l + 1];
     for (int i = l; i <= r; i++)
     {
         aux[i - l] = arr[i];
@@ -94,7 +105,7 @@ void __merge(T arr[], int l, int mid, int r)
             arr[k] = aux[i - l];
             i++;
         }
-        else if ( aux[i-l] < aux[j-l] )
+        else if (aux[i - l] < aux[j - l])
         {
             arr[k] = aux[i - l];
             i++;
@@ -162,7 +173,7 @@ void __mergeSort(T arr[], int l, int r)
     int mid = (r - l) / 2 + l;
     __mergeSort(arr, l, mid);
     __mergeSort(arr, mid + 1, r);
-    if (arr[mid] > arr[mid +1]) // 对于近乎有序的数组有优化
+    if (arr[mid] > arr[mid + 1]) // 对于近乎有序的数组有优化
     {
         __merge(arr, l, mid, r);
     }
@@ -171,7 +182,66 @@ void __mergeSort(T arr[], int l, int r)
 template<typename T>
 void mergeSort(T arr[], int n)
 {
-    __mergeSort(arr,0,n-1);
+    __mergeSort(arr, 0, n - 1);
 }
+#pragma endregion
+
+#pragma region Quick Sort
+//对 arr[l...r]部分进行partition操作
+//返回p， 使得 arr[l...p-1] < arr[p], arr[p+1...r] > arr[p]
+template<typename T>
+int __partition(T arr[], int l, int r)
+{
+    // 随机在arr[l...r]的范围中, 选择一个数值作为标定点
+
+    int ret = rand();
+    int index = ret % (r - l + 1) + l;
+    swap(arr[l], arr[index]);
+    T v = arr[l];
+    // arr[l+1...j] < v ; arr[j+1...i] > v
+    int j = l;
+    for (int i = l + 1; i <= r; i++)
+    {
+        if (arr[i] < v)
+        {
+            std::swap(arr[j + 1], arr[i]);
+            j++;
+        }
+    }
+
+    std::swap(arr[l], arr[j]);
+    return j;
+}
+//对 arr[l...r]部分进行快速排序
+template<typename T>
+void __quickSort(T arr[], int l, int r)
+{
+    // 递归终止
+    if (l >= r)
+    {
+        return;
+    }
+    //采用插入排序进行优化
+    // if ( r - l <= 15)
+    // {
+    //     insertionSort(arr,l,r);
+    //     return;
+    // }
 
 
+    int p = __partition(arr, l, r);
+    __quickSort(arr, l, p - 1);
+    __quickSort(arr, p + 1, r);
+
+}
+template<typename T>
+void quickSort(T arr[], int n)
+{
+    srand(time(NULL));
+    __quickSort(arr, 0, n - 1);
+}
+#pragma endregion
+
+#pragma region Quick Sort2
+
+#pragma endregion
